@@ -1,0 +1,47 @@
+@startuml
+title シーケンス図: ユーザー認証 (登録・ログイン)
+
+actor ユーザー as User
+participant ブラウザ as Browser
+participant "フロントエンド\n(Nuxt)" as Front
+participant "バックエンド\n(Nest.js)" as Back
+database "DB\n(mysql)" as DB
+
+== ユーザー登録 ==
+User -> Browser: ユーザー登録ページを開く
+Browser -> Front: ページロード
+Front -> User: 登録フォーム表示
+
+User -> Front: ユーザー情報入力 (Email, Password)
+Front -> Front: 入力バリデーション
+Front -> Back: 登録リクエスト (POST /auth/register)
+activate Back
+Back -> Back: パスワードハッシュ化
+Back -> DB: ユーザー作成 (INSERT)
+activate DB
+DB --> Back: 作成完了
+deactivate DB
+Back --> Front: 登録成功レスポンス (Token等)
+deactivate Back
+Front -> Browser: ログイン後のホームへリダイレクト
+Browser -> User: TODO一覧画面表示
+
+== ログイン ==
+User -> Browser: ログインページを開く
+Browser -> Front: ページロード
+Front -> User: ログインフォーム表示
+
+User -> Front: ログイン情報入力
+Front -> Back: ログインリクエスト (POST /auth/login)
+activate Back
+Back -> DB: ユーザー検索 (SELECT by Email)
+activate DB
+DB --> Back: ユーザー情報
+deactivate DB
+Back -> Back: パスワード照合
+Back --> Front: 認証成功 (JWT Token発行)
+deactivate Back
+Front -> Browser: Token保存 (Cookie/LocalStorage)
+Front -> Browser: TODO一覧画面へ遷移
+
+@enduml

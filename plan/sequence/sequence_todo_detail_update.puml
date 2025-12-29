@@ -1,0 +1,43 @@
+@startuml
+title シーケンス図: TODO詳細表示・更新
+
+actor ユーザー as User
+participant ブラウザ as Browser
+participant "フロントエンド\n(Nuxt)" as Front
+participant "バックエンド\n(Nest.js)" as Back
+database "DB\n(mysql)" as DB
+
+== TODO詳細表示 ==
+User -> Front: 一覧からTODOをクリック
+Front -> Back: 詳細取得リクエスト (GET /todos/:id)
+activate Back
+Back -> DB: ID検索 (SELECT)
+activate DB
+DB --> Back: TODO詳細データ
+deactivate DB
+Back --> Front: レスポンス
+deactivate Back
+Front -> User: 詳細画面表示
+
+== TODO更新 (編集) ==
+User -> Front: 「編集」ボタンクリック
+Front -> User: 更新フォーム表示 (Markdownエディタ)
+
+loop 編集中のプレビュー
+  User -> Front: 内容入力 (Markdown)
+  Front -> Front: リアルタイムプレビューレンダリング
+  Front -> User: プレビュー表示
+end
+
+User -> Front: 「保存」ボタンクリック
+Front -> Back: 更新リクエスト (PUT /todos/:id)
+activate Back
+Back -> DB: 更新実行 (UPDATE)
+activate DB
+DB --> Back: 完了
+deactivate DB
+Back --> Front: 成功レスポンス
+deactivate Back
+Front -> User: 詳細画面へ戻る (更新済み内容表示)
+
+@enduml

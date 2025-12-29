@@ -1,0 +1,34 @@
+@startuml
+title ユースケース図: TODO管理
+
+left to right direction
+
+actor "ログイン済みユーザー" as User
+
+package "TODO管理機能" {
+  usecase "TODO一覧を閲覧する" as ViewList
+  usecase "TODOを検索・絞り込む" as Search
+  usecase "TODO詳細を閲覧する" as ViewDetail
+  usecase "TODOを更新する" as Update
+  usecase "マークダウンプレビューを確認する" as Preview
+}
+
+User --> ViewList
+User --> Search
+User --> ViewDetail
+User --> Update
+
+ViewList <.. Search : <<extend>>
+Update ..> Preview : <<include>>
+
+note right of Search
+  ・キーワード検索
+  ・締め切り絞り込み
+  ・進捗絞り込み
+end note
+
+note right of Update
+  ユーザーとTODOは紐づいている
+end note
+
+@enduml

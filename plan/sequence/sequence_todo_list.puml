@@ -1,0 +1,51 @@
+@startuml
+title シーケンス図: TODO一覧・検索
+
+actor ユーザー as User
+participant ブラウザ as Browser
+participant "フロントエンド\n(Nuxt)" as Front
+participant "バックエンド\n(Nest.js)" as Back
+database "DB\n(mysql)" as DB
+
+== TODO一覧表示 (初期ロード) ==
+User -> Front: TODO一覧画面へアクセス
+Front -> Back: TODO一覧取得リクエスト (GET /todos)\nquery: { page: 1, limit: 5 }
+activate Back
+note right of Back
+  初期条件:
+  - 進捗: 完了以外
+  - 順序: 締め切り昇順
+end note
+Back -> DB: クエリ実行 (SELECT)\nWHERE status != done\nORDER BY deadline ASC\nLIMIT 5 OFFSET 0
+activate DB
+DB --> Back: TODOリストデータ
+deactivate DB
+Back --> Front: レスポンス (TODOリスト, 総件数)
+deactivate Back
+Front -> User: TODO一覧表示 (ページネーション付)
+
+== 検索・絞り込み ==
+User -> Front: 検索条件入力 / 変更\n(キーワード, 期限, ステータス)
+Front -> Back: 検索リクエスト (GET /todos)\nquery: { keyword, deadline, status, page, limit }
+activate Back
+Back -> DB: 条件付きクエリ実行
+activate DB
+DB --> Back: フィルタリング済みデータ
+deactivate DB
+Back --> Front: 検索結果レスポンス
+deactivate Back
+Front -> User: 絞り込み結果表示
+
+== ページネーション ==
+User -> Front: 「次へ」ボタンクリック (2ページ目)
+Front -> Back: 一覧取得リクエスト (GET /todos)\nquery: { page: 2, ...currentFilters }
+activate Back
+Back -> DB: クエリ実行 (OFFSET 5)
+activate DB
+DB --> Back: データ取得
+deactivate DB
+Back --> Front: 2ページ目のデータ
+deactivate Back
+Front -> User: 2ページ目表示
+
+@enduml

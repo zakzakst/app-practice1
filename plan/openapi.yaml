@@ -1,0 +1,280 @@
+openapi: 3.0.0
+info:
+  title: TODO App BFF API
+  description: API definition for the TODO application (Nuxt -> Nest.js)
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /auth/register:
+    post:
+      summary: User Registration
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Bad request (validation error)
+
+  /auth/login:
+    post:
+      summary: User Login
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Unauthorized
+
+  /auth/logout:
+    post:
+      summary: User Logout
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Logout successful
+
+  /todos:
+    get:
+      summary: Get TODO List
+      tags:
+        - Todos
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 5
+          description: Items per page
+        - in: query
+          name: keyword
+          schema:
+            type: string
+          description: Filter by title or content
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [pending, in_progress, completed]
+          description: Filter by status
+        - in: query
+          name: deadline_from
+          schema:
+            type: string
+            format: date
+          description: Filter by deadline range start
+        - in: query
+          name: deadline_to
+          schema:
+            type: string
+            format: date
+          description: Filter by deadline range end (or specific date)
+      responses:
+        '200':
+          description: List of TODOs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Todo'
+                  total:
+                    type: integer
+                    description: Total count for pagination
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
+
+    post:
+      summary: Create new TODO
+      tags:
+        - Todos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTodoDto'
+      responses:
+        '201':
+          description: TODO created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+
+  /todos/{id}:
+    get:
+      summary: Get TODO Detail
+      tags:
+        - Todos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: TODO ID
+      responses:
+        '200':
+          description: TODO details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '404':
+          description: TODO not found
+
+    put:
+      summary: Update TODO
+      tags:
+        - Todos
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTodoDto'
+      responses:
+        '200':
+          description: TODO updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '404':
+          description: TODO not found
+
+components:
+  schemas:
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT Access Token
+        user:
+          $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+
+    Todo:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+          description: Markdown content
+        deadline:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, in_progress, completed]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateTodoDto:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        deadline:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, in_progress, completed]
+          default: pending
+
+    UpdateTodoDto:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        deadline:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [pending, in_progress, completed]
