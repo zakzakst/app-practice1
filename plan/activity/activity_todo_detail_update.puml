@@ -1,0 +1,42 @@
+@startuml
+title アクティビティ図: TODO詳細・更新
+
+start
+note
+  前提: TODO一覧でTODOを選択
+end note
+
+:TODO詳細画面表示;
+
+if (ユーザー操作) then (編集ボタン押下)
+  :TODO更新画面表示;
+  
+  repeat
+    :マークダウン内容編集;
+    :プレビュー表示更新;
+  repeat while (編集継続?) is (Yes)
+  
+  :保存ボタン押下;
+  if (入力バリデーション) then (OK)
+    :保存処理;
+    
+    if (保存成功) then (Yes)
+      :TODO詳細画面へ戻る;
+    else (No)
+      :エラー表示;
+      :更新画面に留まる;
+      detach
+    endif
+  else (NG)
+    :エラー表示;
+    :更新画面に留まる;
+    detach
+  endif
+
+else (戻るボタン押下)
+endif
+
+:TODO一覧画面へ戻る;
+stop
+
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+title アクティビティ図: TODO一覧・検索
+
+start
+note
+  前提: ログイン済み
+end note
+
+:TODO一覧画面表示;
+note right
+  【初期表示仕様】
+  ・ページネーション: 5件/ページ
+  ・並び順:
+    1. 進捗「完了以外」優先
+    2. 締め切りが早い順 (期限切れ含む)
+end note
+
+repeat
+  fork
+    :一覧を閲覧 (ページ切り替え);
+  fork again
+    :絞り込み / 検索アクション;
+    note right
+      ・キーワード検索 (タイトル/内容)
+      ・締め切りで絞り込み (日付指定/期限切れ/今日)
+      ・進捗状態で絞り込み
+    end note
+    :一覧データ更新;
+  fork again
+    :TODOを選択;
+    :TODO詳細画面へ遷移;
+    stop
+  fork again
+    :ログアウト;
+    :ログイン画面へ戻る;
+    stop
+  end fork
+repeat while (画面滞在)
+
+@enduml
