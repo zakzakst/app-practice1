@@ -1,0 +1,23 @@
+@startuml
+title ER図
+
+entity "ユーザー" as User {
+  + user_id: int
+  --
+  * name: string
+  * email: string
+}
+
+entity "TODO" as Todo {
+  + id: int
+  --
+  * author: int
+  * title: string
+  * content: string
+  * deadline: string
+  * status: string
+}
+
+User ||--o{ Todo
+
+@enduml
