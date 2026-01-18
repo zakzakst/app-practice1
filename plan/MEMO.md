@@ -40,3 +40,28 @@
 - mermaid利用してみる（テンプレートも作る？）
     - https://zenn.dev/sonicmoov/articles/5476edf4be9af8
 - デザインDOCへの展開をしやすいような、議論資料のテンプレート作る
+- Antigravityで下記出力してもらうの試す
+	- テストコード観点
+	- プルリクエスト時のレビュー観点
+- vitestのit調べる
+	- it.each
+	- it.fails
+	- it.skip
+	- it.todo
+- 勉強計画
+	- 公開する用の構成
+		- フロント：Vercel（Next.js SSR）
+		- BFF, Middle Ware：Vercel（Next.js SSR API Routes）
+		- API：AWS Lambda + API Gateway
+		- DB：Aurora Serverless v2
+		- AWSはAWS CDK管理
+		- 一度、Next.jsのSSGをAWS S3にデプロイするのを練習でやってから、VercelでのSSR利用を練習してみる
+	- 学習メイン
+		- AWS EC2 docker
+			- Next.js SSR
+			- API：Nest.js
+			- DB：PostgreSQL
+			- 参考
+				- https://zenn.dev/kuuki/articles/aws-ec2-install-postgresql
+				- https://zenn.dev/eng_o109/articles/41611f14917ba2
+	- 余裕あればステージング環境の構成も考えられるようになりたい
