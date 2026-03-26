@@ -65,3 +65,32 @@
 				- https://zenn.dev/kuuki/articles/aws-ec2-install-postgresql
 				- https://zenn.dev/eng_o109/articles/41611f14917ba2
 	- 余裕あればステージング環境の構成も考えられるようになりたい
+- 調べる
+	- npm
+		- log4js: https://www.npmjs.com/package/log4js
+			- ⇒済
+		- google-libphonenumber: https://www.npmjs.com/package/google-libphonenumber
+			- ⇒済
+		- pdfjs-dist: https://www.npmjs.com/package/pdfjs-dist
+			- ⇒済
+		- patch-package: https://www.npmjs.com/package/patch-package
+		- cleave.js: https://www.npmjs.com/package/cleave.js
+			- ⇒済
+	- vscode
+		- chatmode
+			- Beast Mode
+		- agents
+	- copilot sdkとsimple-git組み合わせて、developブランチとのdiffをレビューしてもらうnode script作りたい
+		- https://zenn.dev/openjny/articles/8c98d344f78889
+		- https://qiita.com/koooge/items/46c626549f61578d7c3e
+	- ツール使ってレビューガイドライン作ってみる
+		- https://rgc.goofmint.dev/
+			- ⇒済
+	- zod brand
+		- https://bufferings.hatenablog.com/entry/2025/01/12/171721
+- 下記の「難しくわからない技術記事の全体像を掴みたいとき」のGem試してみる
+	- https://zenn.dev/mavericks/articles/my-favorite-google-gems
+		- ⇒済
+- ADR（意思決定ドキュメント）残し方、調べてみる
+- 固定の処理を組み合わせて実行 ⇒ オーケストレーション
+- 対話しながら必要に応じて定型の処理をしてほしい ⇒ エージェントスキル
